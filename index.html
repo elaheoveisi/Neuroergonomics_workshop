@@ -101,21 +101,28 @@
         padding: 0.75rem;
         border-radius: 8px;
       }
+
+      .field-help {
+        margin: 0.35rem 0 0;
+        font-size: 0.9rem;
+      }
+
+      .field-help.error {
+        color: #a40e26;
+      }
     </style>
   </head>
 
   <body>
     <main>
       <h1>Neuroergonomics Workshop</h1>
-      <p class="muted">
-        Submit your work for review by completing the form below.
-      </p>
+      <p class="muted">Submit your work for review by completing the form below.</p>
 
       <section class="card" aria-labelledby="submission-form-heading">
         <h2 id="submission-form-heading">Submit your work</h2>
 
         <p class="note">
-         Submission deadline: May 20th (2026).
+          Submission deadline: May 20th (2026).
           <br />
           <strong>Submission email:</strong>
           <a href="mailto:elahe.oveisi@okstate.edu">elahe.oveisi@okstate.edu</a>
@@ -154,10 +161,20 @@
             <input id="title" name="title" type="text" required />
           </div>
 
-         <div>
-           <label for="abstract">Abstract (150 words)</label>
-           <textarea id="abstract" name="abstract" rows="4" maxlength="150" required></textarea>
-         </div>
+          <div>
+            <label for="abstract">Abstract (max 150 words)</label>
+            <textarea
+              id="abstract"
+              name="abstract"
+              rows="5"
+              required
+              aria-describedby="abstract-help abstract-wordcount"
+            ></textarea>
+            <p id="abstract-wordcount" class="field-help muted">0 / 150 words</p>
+            <p id="abstract-help" class="field-help muted">
+              Tip: Word count is based on whitespace-separated words.
+            </p>
+          </div>
 
           <div>
             <label for="attachment">Attach your file</label>
@@ -168,9 +185,7 @@
               required
               accept=".pdf,.doc,.docx"
             />
-            <p class="muted" style="margin: 0.25rem 0 0">
-              Accepted files: PDF, Word.
-            </p>
+            <p class="muted" style="margin: 0.25rem 0 0">Accepted files: PDF, Word.</p>
           </div>
 
           <input
@@ -181,11 +196,7 @@
 
           <input type="hidden" name="_replyto" value="" />
 
-          <input
-            type="hidden"
-            name="send_to"
-            value="elahe.oveisi@okstate.edu"
-          />
+          <input type="hidden" name="send_to" value="elahe.oveisi@okstate.edu" />
 
           <button type="submit">Submit work</button>
 
@@ -197,29 +208,52 @@
     <script>
       const form = document.getElementById('submission-form');
       const formMessage = document.getElementById('form-message');
+      const abstract = document.getElementById('abstract');
+      const abstractWordcount = document.getElementById('abstract-wordcount');
+
+      const MAX_ABSTRACT_WORDS = 150;
 
       function showFormMessage(type, message) {
         formMessage.className = type;
         formMessage.textContent = message;
       }
 
+      function countWords(text) {
+        return text.trim() ? text.trim().split(/\s+/).length : 0;
+      }
+
+      function updateAbstractValidation() {
+        const words = countWords(abstract.value);
+        abstractWordcount.textContent = `${words} / ${MAX_ABSTRACT_WORDS} words`;
+
+        if (words > MAX_ABSTRACT_WORDS) {
+          abstractWordcount.classList.remove('muted');
+          abstractWordcount.classList.add('error');
+          abstract.setCustomValidity(
+            `Abstract is too long (${words} words). Maximum is ${MAX_ABSTRACT_WORDS} words.`
+          );
+        } else {
+          abstractWordcount.classList.add('muted');
+          abstractWordcount.classList.remove('error');
+          abstract.setCustomValidity('');
+        }
+      }
+
+      // Initialize
+      updateAbstractValidation();
+
+      abstract.addEventListener('input', updateAbstractValidation);
+      abstract.addEventListener('blur', updateAbstractValidation);
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        if (form.action.includes('PASTE_YOUR_FORM_ENDPOINT_HERE')) {
-          showFormMessage(
-            'error',
-            'The form is not configured yet. Please contact the organizer.'
-          );
-          return;
-        }
+        // Ensure latest validation state
+        updateAbstractValidation();
 
         if (!form.checkValidity()) {
           form.reportValidity();
-          showFormMessage(
-            'error',
-            'Please complete all fields and attach your file.'
-          );
+          showFormMessage('error', 'Please complete all fields correctly and attach your file.');
           return;
         }
 
@@ -246,16 +280,11 @@
           }
 
           form.reset();
+          updateAbstractValidation();
 
-          showFormMessage(
-            'success',
-            'Submission received. Thank you!'
-          );
+          showFormMessage('success', 'Submission received. Thank you!');
         } catch (error) {
-          showFormMessage(
-            'error',
-            'Unable to send your submission right now. Please try again.'
-          );
+          showFormMessage('error', 'Unable to send your submission right now. Please try again.');
         }
       });
     </script>

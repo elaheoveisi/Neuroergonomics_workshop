@@ -249,7 +249,7 @@
     <section class="section">
       <h2>About This Research Area</h2>
       <p>
-        Submissions focus on research related to 
+        Submissions focus on research related to
         <span class="highlight">Beyond the Survey: Real-Time Physiological Sensing for Human–Machine Teaming,</span>
         and intelligent decision-support systems. These topics are important for understanding how humans
         interact with advanced technologies in complex and safety-critical environments.
@@ -263,8 +263,8 @@
       <h2>Research Fields</h2>
       <div class="image-grid">
         <div class="image-card">
-          <img 
-            src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=900&q=80" 
+          <img
+            src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=900&q=80"
             alt="EEG and brain research"
           />
           <div>
@@ -276,8 +276,8 @@
           </div>
         </div>
         <div class="image-card">
-          <img 
-            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=900&q=80" 
+          <img
+            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=900&q=80"
             alt="Robot technology"
           />
           <div>
@@ -317,45 +317,74 @@
         action="/thank-you.html"
       >
         <input type="hidden" name="form-name" value="submission" />
+
         <label for="name">Full Name</label>
-        <input 
-          id="name" 
-          type="text" 
-          name="name" 
-          placeholder="Enter your full name" 
-          required 
+        <input
+          id="name"
+          type="text"
+          name="name"
+          placeholder="Enter your full name"
+          required
         />
+
+        <label for="affiliation">Affiliation</label>
+        <input
+          id="affiliation"
+          type="text"
+          name="affiliation"
+          placeholder="e.g., University / Company, Department"
+        />
+
+        <label for="coauthors">Co-authors (names)</label>
+        <textarea
+          id="coauthors"
+          name="coauthors"
+          rows="3"
+          placeholder="Enter co-author names (one per line or separated by commas)"
+        ></textarea>
+
+        <label for="presenters">Presenter(s) (names)</label>
+        <textarea
+          id="presenters"
+          name="presenters"
+          rows="2"
+          placeholder="Enter presenter name(s)"
+        ></textarea>
+
         <label for="email">Email</label>
-        <input 
-          id="email" 
-          type="email" 
-          name="email" 
-          placeholder="Enter your email" 
-          required 
+        <input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          required
         />
+
         <label for="title">Title of Your Work</label>
-        <input 
-          id="title" 
-          type="text" 
-          name="title" 
-          placeholder="Enter your work title" 
-          required 
+        <input
+          id="title"
+          type="text"
+          name="title"
+          placeholder="Enter your work title"
+          required
         />
+
         <label for="abstract">Abstract</label>
-        <textarea 
-          id="abstract" 
-          name="abstract" 
-          rows="6" 
+        <textarea
+          id="abstract"
+          name="abstract"
+          rows="6"
           placeholder="Write your abstract here"
           required
         ></textarea>
+
         <label for="attachment">Attach File</label>
-        <input 
-          id="attachment" 
-          type="file" 
-          name="attachment" 
+        <input
+          id="attachment"
+          type="file"
+          name="attachment"
           accept=".pdf,.doc,.docx"
-          required 
+          required
         />
         <p class="note">
           Allowed file types: PDF, Word.

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neuroergonomics Workshop Submissions</title>
+
     <style>
       :root {
         color-scheme: light;
@@ -60,13 +61,13 @@
 
       input[type='file'] {
         padding: 0.45rem;
-        background: #fff;
+        background: #ffffff;
       }
 
       button {
         border: none;
         background: #1f6feb;
-        color: #fff;
+        color: #ffffff;
         font-weight: 600;
         cursor: pointer;
       }
@@ -100,39 +101,38 @@
         padding: 0.75rem;
         border-radius: 8px;
       }
-
-      code {
-        background: rgba(27, 31, 36, 0.06);
-        padding: 0.15rem 0.25rem;
-        border-radius: 6px;
-      }
     </style>
   </head>
+
   <body>
     <main>
       <h1>Neuroergonomics Workshop</h1>
-      <p class="muted">Submit your work for review by completing the form below.</p>
+      <p class="muted">
+        Submit your work for review by completing the form below.
+      </p>
 
       <section class="card" aria-labelledby="submission-form-heading">
         <h2 id="submission-form-heading">Submit your work</h2>
 
         <p class="note">
-          Your submission will be sent privately to the organizers (not displayed on this website).<br />
-          <strong>Organizers email:</strong> <a href="mailto:elahe.oveisi1992@gmail.com">elahe.oveisi1992@gmail.com</a>
+          Your submission will be sent privately by email and will not be displayed on this website.
+          <br />
+          <strong>Submission email:</strong>
+          <a href="mailto:elahe.oveisi@okstate.edu">elahe.oveisi@okstate.edu</a>
         </p>
 
         <!--
           IMPORTANT:
-          This is a static GitHub Pages site, so it cannot send emails by itself.
+          GitHub Pages is static, so it cannot send emails by itself.
 
-          To email submissions (including file attachments) you must use a form backend.
-          Example options: Formspree, Getform, Basin, Netlify Forms, etc.
+          To receive submissions by email, including file attachments:
+          1. Create a form endpoint using a service such as Formspree, Getform, Basin, or Netlify Forms.
+          2. Replace PASTE_YOUR_FORM_ENDPOINT_HERE with your real form endpoint.
+          3. Configure the form service to send submissions to elahe.oveisi@okstate.edu.
 
-          1) Create a form endpoint with your chosen provider.
-          2) Paste the endpoint URL into the action="..." below.
-
-          Until you set the action URL, the form will show an error message and won't submit.
+          Submitted work is not shown on this website.
         -->
+
         <form
           id="submission-form"
           method="POST"
@@ -160,7 +160,7 @@
           </div>
 
           <div>
-            <label for="attachment">Attach your file (required)</label>
+            <label for="attachment">Attach your file</label>
             <input
               id="attachment"
               name="attachment"
@@ -169,15 +169,26 @@
               accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.7z,.txt,.csv,.xlsx,.xls,.png,.jpg,.jpeg"
             />
             <p class="muted" style="margin: 0.25rem 0 0">
-              Accepted: PDF, Word, PowerPoint, ZIP/RAR/7z, Excel/CSV, images.
+              Accepted files: PDF, Word, PowerPoint, ZIP/RAR/7z, Excel/CSV, PNG, JPG, JPEG.
             </p>
           </div>
 
-          <!-- Helps some form providers route replies -->
-          <input type="hidden" name="_subject" value="Neuroergonomics Workshop Submission" />
+          <input
+            type="hidden"
+            name="_subject"
+            value="New Neuroergonomics Workshop Submission"
+          />
+
           <input type="hidden" name="_replyto" value="" />
 
+          <input
+            type="hidden"
+            name="send_to"
+            value="elahe.oveisi@okstate.edu"
+          />
+
           <button type="submit">Submit work</button>
+
           <p id="form-message" class="muted" aria-live="polite"></p>
         </form>
       </section>
@@ -195,19 +206,20 @@
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        // Guard: remind to configure the form backend endpoint.
         if (form.action.includes('PASTE_YOUR_FORM_ENDPOINT_HERE')) {
           showFormMessage(
             'error',
-            'Form is not configured yet. Please contact the organizers.'
+            'The form is not configured yet. Please contact the organizer.'
           );
           return;
         }
 
-        // Validate required fields.
         if (!form.checkValidity()) {
           form.reportValidity();
-          showFormMessage('error', 'Please complete all fields and attach your file.');
+          showFormMessage(
+            'error',
+            'Please complete all fields and attach your file.'
+          );
           return;
         }
 
@@ -216,7 +228,6 @@
 
           const formData = new FormData(form);
 
-          // Some providers use _replyto; set it from the email field if present.
           const email = formData.get('email');
           if (email && !formData.get('_replyto')) {
             formData.set('_replyto', String(email));
@@ -235,7 +246,11 @@
           }
 
           form.reset();
-          showFormMessage('success', 'Submission received. Thank you!');
+
+          showFormMessage(
+            'success',
+            'Submission received. Thank you!'
+          );
         } catch (error) {
           showFormMessage(
             'error',

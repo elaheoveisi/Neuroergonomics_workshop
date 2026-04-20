@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuroergonomics Workshop Submissions</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        background: #f5f7fb;
+        color: #1b1f24;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+      }
+
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(10, 20, 40, 0.08);
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+
+      form {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      label {
+        font-weight: 600;
+      }
+
+      input,
+      textarea,
+      button {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+        padding: 0.6rem;
+        border-radius: 8px;
+      }
+
+      input,
+      textarea {
+        border: 1px solid #c4cbd8;
+      }
+
+      button {
+        border: none;
+        background: #1f6feb;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #1758b8;
+      }
+
+      #form-message {
+        margin: 0;
+        min-height: 1.2rem;
+      }
+
+      #form-message.error {
+        color: #a40e26;
+      }
+
+      #form-message.success {
+        color: #1f6feb;
+      }
+
+      .submission h3 {
+        margin: 0 0 0.25rem;
+      }
+
+      .muted {
+        color: #5a6472;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Neuroergonomics Workshop</h1>
+      <p class="muted">Submit your work for review by completing the form below.</p>
+
+      <section class="card" aria-labelledby="submission-form-heading">
+        <h2 id="submission-form-heading">Submit your work</h2>
+        <form id="submission-form">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required />
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+
+          <div>
+            <label for="title">Project title</label>
+            <input id="title" name="title" type="text" required />
+          </div>
+
+          <div>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+          </div>
+
+          <button type="submit">Submit work</button>
+          <p id="form-message" class="muted" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="submitted-heading">
+        <h2 id="submitted-heading">Submitted work</h2>
+        <div id="submission-list" class="muted">No submissions yet.</div>
+      </section>
+    </main>
+
+    <script>
+      const STORAGE_KEY = 'workshopSubmissions';
+      const form = document.getElementById('submission-form');
+      const submissionList = document.getElementById('submission-list');
+      const formMessage = document.getElementById('form-message');
+
+      function getSubmissions() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          return saved ? JSON.parse(saved) : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveSubmissions(submissions) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function renderSubmissions() {
+        const submissions = getSubmissions();
+
+        if (submissions.length === 0) {
+          submissionList.textContent = 'No submissions yet.';
+          return;
+        }
+
+        submissionList.textContent = '';
+
+        submissions.forEach((submission) => {
+          const article = document.createElement('article');
+          article.className = 'submission';
+          article.style.padding = '0.75rem 0';
+          article.style.borderBottom = '1px solid #e5eaf1';
+
+          const title = document.createElement('h3');
+          title.textContent = submission.title;
+
+          const meta = document.createElement('p');
+          meta.className = 'muted';
+          meta.style.margin = '0 0 0.25rem';
+          meta.textContent = `By ${submission.name} (${submission.email})`;
+
+          const description = document.createElement('p');
+          description.style.margin = '0';
+          description.textContent = submission.description;
+
+          article.appendChild(title);
+          article.appendChild(meta);
+          article.appendChild(description);
+          submissionList.appendChild(article);
+        });
+      }
+
+      function showFormMessage(type, message) {
+        formMessage.className = type;
+        formMessage.textContent = message;
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const submission = {
+          name: formData.get('name').trim(),
+          email: formData.get('email').trim(),
+          title: formData.get('title').trim(),
+          description: formData.get('description').trim()
+        };
+
+        if (!submission.name || !submission.email || !submission.title || !submission.description) {
+          showFormMessage('error', 'Please complete all fields before submitting.');
+          return;
+        }
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          showFormMessage('error', 'Please provide a valid email address.');
+          return;
+        }
+
+        const submissions = getSubmissions();
+        submissions.unshift(submission);
+        if (!saveSubmissions(submissions)) {
+          showFormMessage('error', 'Unable to save your submission right now. Please try again.');
+          return;
+        }
+        form.reset();
+        showFormMessage('success', 'Submission received. Thank you!');
+        renderSubmissions();
+      });
+
+      renderSubmissions();
+    </script>
+  </body>
+</html>

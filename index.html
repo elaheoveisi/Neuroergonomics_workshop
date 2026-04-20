@@ -1,17 +1,371 @@
-<style>
-    .download-button {
-        background: linear-gradient(90deg, #007BFF, #00BFFF);
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        display: inline-block;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Research Work Submission</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
     }
-</style>
 
-<a href="https://submissions.neuroscienceeverydayworld.org/wp-content/uploads/2026/01/NEC2026-Abstract-Template.docx" download target="_blank" rel="noopener" class="download-button">Submission Template</a>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eef4ff, #f8fbff);
+      color: #1f2937;
+    }
 
-<form>
-    <!-- Existing form elements -->
-</form>
+    header {
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
+
+    header p {
+      font-size: 18px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: #e5e7eb;
+    }
+
+    .deadline-box {
+      margin-top: 30px;
+      display: inline-block;
+      background: #facc15;
+      color: #111827;
+      padding: 14px 24px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 18px;
+      padding: 35px;
+      margin-bottom: 35px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .section h2 {
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 28px;
+    }
+
+    .section p {
+      line-height: 1.7;
+      font-size: 16px;
+      color: #374151;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .image-card {
+      background: #f9fafb;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-card div {
+      padding: 18px;
+    }
+
+    .image-card h3 {
+      margin: 0 0 10px;
+      color: #111827;
+    }
+
+    .image-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    /* Purple download button for Submission Template */
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 12px 18px;
+      background: linear-gradient(135deg, #7c3aed, #4c1d95);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 10px 24px rgba(124, 58, 237, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .download-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(124, 58, 237, 0.35);
+      filter: brightness(1.05);
+    }
+
+    .download-button:active {
+      transform: translateY(0);
+    }
+
+    .download-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.25), 0 14px 30px rgba(124, 58, 237, 0.35);
+    }
+
+    .download-button svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: currentColor;
+      opacity: 0.95;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 15px;
+      background: #f8fafc;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: -10px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .highlight {
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 32px;
+      }
+
+      .section {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Research Work Submission</h1>
+    <p>
+      Welcome to the Neuroergonomics workshop website.
+      Please submit your work before the deadline.
+    </p>
+    <div class="deadline-box">
+      Submission Deadline: May 20
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="section">
+      <h2>About This Research Area</h2>
+      <p>
+        Submissions focus on research related to 
+        <span class="highlight">Beyond the Survey: Real-Time Physiological Sensing for Human–Machine Teaming,</span>
+        and intelligent decision-support systems. These topics are important for understanding how humans
+        interact with advanced technologies in complex and safety-critical environments.
+      </p>
+      <p>
+        Workshop timeline: July 13 (Boston University).<br>
+        Organizer: Elahe Oveisi (elahe.oveisi.okstate.edu), Dr Hemmanth Manjunatha (Hemanth.manjunatha@okstate.edu)
+      </p>
+    </section>
+    <section class="section">
+      <h2>Research Fields</h2>
+      <div class="image-grid">
+        <div class="image-card">
+          <img 
+            src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=900&q=80" 
+            alt="EEG and brain research"
+          />
+          <div>
+            <h3>EEG and Brain Signals</h3>
+            <p>
+              EEG data can be used to study cognitive workload, attention, errors,
+              and human performance during complex tasks.
+            </p>
+          </div>
+        </div>
+        <div class="image-card">
+          <img 
+            src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=900&q=80" 
+            alt="Robot technology"
+          />
+          <div>
+            <h3>Robots and Intelligent Systems</h3>
+            <p>
+              Robots and AI systems can assist humans in navigation, decision-making,
+              rescue operations, and safety-critical missions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Submit Your Work</h2>
+      <p>
+        Please complete the form below and attach your file.
+      </p>
+      <p>
+        <a
+          class="download-button"
+          href="https://submissions.neuroscienceeverydayworld.org/wp-content/uploads/2026/01/NEC2026-Abstract-Template.docx"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3a1 1 0 0 1 1 1v9.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42L11 13.59V4a1 1 0 0 1 1-1z"></path>
+            <path d="M5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1z"></path>
+          </svg>
+          Submission Template
+        </a>
+      </p>
+      <form
+        name="submission"
+        method="POST"
+        data-netlify="true"
+        enctype="multipart/form-data"
+        action="/thank-you.html"
+      >
+        <input type="hidden" name="form-name" value="submission" />
+        <label for="name">Full Name</label>
+        <input 
+          id="name" 
+          type="text" 
+          name="name" 
+          placeholder="Enter your full name" 
+          required 
+        />
+        <label for="email">Email</label>
+        <input 
+          id="email" 
+          type="email" 
+          name="email" 
+          placeholder="Enter your email" 
+          required 
+        />
+        <label for="title">Title of Your Work</label>
+        <input 
+          id="title" 
+          type="text" 
+          name="title" 
+          placeholder="Enter your work title" 
+          required 
+        />
+        <label for="abstract">Abstract</label>
+        <textarea 
+          id="abstract" 
+          name="abstract" 
+          rows="6" 
+          placeholder="Write your abstract here"
+          required
+        ></textarea>
+        <label for="attachment">Attach File</label>
+        <input 
+          id="attachment" 
+          type="file" 
+          name="attachment" 
+          accept=".pdf,.doc,.docx"
+          required 
+        />
+        <p class="note">
+          Allowed file types: PDF, Word.
+        </p>
+        <button type="submit">Submit Work</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    © 2026 Research Work Submission | EEG, Robotics, and Human-Machine Interaction
+  </footer>
+</body>
+</html>

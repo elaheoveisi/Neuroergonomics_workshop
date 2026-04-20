@@ -58,6 +58,11 @@
         border: 1px solid #c4cbd8;
       }
 
+      input[type='file'] {
+        padding: 0.45rem;
+        background: #fff;
+      }
+
       button {
         border: none;
         background: #1f6feb;
@@ -83,12 +88,23 @@
         color: #1f6feb;
       }
 
-      .submission h3 {
-        margin: 0 0 0.25rem;
-      }
-
       .muted {
         color: #5a6472;
+      }
+
+      .note {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        background: #f6f8ff;
+        border: 1px solid #d8e2ff;
+        padding: 0.75rem;
+        border-radius: 8px;
+      }
+
+      code {
+        background: rgba(27, 31, 36, 0.06);
+        padding: 0.15rem 0.25rem;
+        border-radius: 6px;
       }
     </style>
   </head>
@@ -99,7 +115,30 @@
 
       <section class="card" aria-labelledby="submission-form-heading">
         <h2 id="submission-form-heading">Submit your work</h2>
-        <form id="submission-form">
+
+        <p class="note">
+          Your submission will be sent privately to the organizers (not displayed on this website).<br />
+          <strong>Organizers email:</strong> <a href="mailto:elahe.oveisi1992@gmail.com">elahe.oveisi1992@gmail.com</a>
+        </p>
+
+        <!--
+          IMPORTANT:
+          This is a static GitHub Pages site, so it cannot send emails by itself.
+
+          To email submissions (including file attachments) you must use a form backend.
+          Example options: Formspree, Getform, Basin, Netlify Forms, etc.
+
+          1) Create a form endpoint with your chosen provider.
+          2) Paste the endpoint URL into the action="..." below.
+
+          Until you set the action URL, the form will show an error message and won't submit.
+        -->
+        <form
+          id="submission-form"
+          method="POST"
+          enctype="multipart/form-data"
+          action="PASTE_YOUR_FORM_ENDPOINT_HERE"
+        >
           <div>
             <label for="name">Name</label>
             <input id="name" name="name" type="text" required />
@@ -120,115 +159,90 @@
             <textarea id="description" name="description" rows="4" required></textarea>
           </div>
 
+          <div>
+            <label for="attachment">Attach your file (required)</label>
+            <input
+              id="attachment"
+              name="attachment"
+              type="file"
+              required
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.7z,.txt,.csv,.xlsx,.xls,.png,.jpg,.jpeg"
+            />
+            <p class="muted" style="margin: 0.25rem 0 0">
+              Accepted: PDF, Word, PowerPoint, ZIP/RAR/7z, Excel/CSV, images.
+            </p>
+          </div>
+
+          <!-- Helps some form providers route replies -->
+          <input type="hidden" name="_subject" value="Neuroergonomics Workshop Submission" />
+          <input type="hidden" name="_replyto" value="" />
+
           <button type="submit">Submit work</button>
           <p id="form-message" class="muted" aria-live="polite"></p>
         </form>
       </section>
-
-      <section class="card" aria-labelledby="submitted-heading">
-        <h2 id="submitted-heading">Submitted work</h2>
-        <div id="submission-list" class="muted">No submissions yet.</div>
-      </section>
     </main>
 
     <script>
-      const STORAGE_KEY = 'workshopSubmissions';
       const form = document.getElementById('submission-form');
-      const submissionList = document.getElementById('submission-list');
       const formMessage = document.getElementById('form-message');
-
-      function getSubmissions() {
-        try {
-          const saved = localStorage.getItem(STORAGE_KEY);
-          return saved ? JSON.parse(saved) : [];
-        } catch {
-          return [];
-        }
-      }
-
-      function saveSubmissions(submissions) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
-          return true;
-        } catch {
-          return false;
-        }
-      }
-
-      function renderSubmissions() {
-        const submissions = getSubmissions();
-
-        if (submissions.length === 0) {
-          submissionList.textContent = 'No submissions yet.';
-          return;
-        }
-
-        submissionList.textContent = '';
-
-        submissions.forEach((submission) => {
-          const article = document.createElement('article');
-          article.className = 'submission';
-          article.style.padding = '0.75rem 0';
-          article.style.borderBottom = '1px solid #e5eaf1';
-
-          const title = document.createElement('h3');
-          title.textContent = submission.title;
-
-          const meta = document.createElement('p');
-          meta.className = 'muted';
-          meta.style.margin = '0 0 0.25rem';
-          meta.textContent = `By ${submission.name} (${submission.email})`;
-
-          const description = document.createElement('p');
-          description.style.margin = '0';
-          description.textContent = submission.description;
-
-          article.appendChild(title);
-          article.appendChild(meta);
-          article.appendChild(description);
-          submissionList.appendChild(article);
-        });
-      }
 
       function showFormMessage(type, message) {
         formMessage.className = type;
         formMessage.textContent = message;
       }
 
-      form.addEventListener('submit', (event) => {
+      form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const formData = new FormData(form);
-        const submission = {
-          name: formData.get('name').trim(),
-          email: formData.get('email').trim(),
-          title: formData.get('title').trim(),
-          description: formData.get('description').trim()
-        };
-
-        if (!submission.name || !submission.email || !submission.title || !submission.description) {
-          showFormMessage('error', 'Please complete all fields before submitting.');
+        // Guard: remind to configure the form backend endpoint.
+        if (form.action.includes('PASTE_YOUR_FORM_ENDPOINT_HERE')) {
+          showFormMessage(
+            'error',
+            'Form is not configured yet. Please contact the organizers.'
+          );
           return;
         }
 
+        // Validate required fields.
         if (!form.checkValidity()) {
           form.reportValidity();
-          showFormMessage('error', 'Please provide a valid email address.');
+          showFormMessage('error', 'Please complete all fields and attach your file.');
           return;
         }
 
-        const submissions = getSubmissions();
-        submissions.unshift(submission);
-        if (!saveSubmissions(submissions)) {
-          showFormMessage('error', 'Unable to save your submission right now. Please try again.');
-          return;
+        try {
+          showFormMessage('muted', 'Sending...');
+
+          const formData = new FormData(form);
+
+          // Some providers use _replyto; set it from the email field if present.
+          const email = formData.get('email');
+          if (email && !formData.get('_replyto')) {
+            formData.set('_replyto', String(email));
+          }
+
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              Accept: 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Submission failed');
+          }
+
+          form.reset();
+          showFormMessage('success', 'Submission received. Thank you!');
+        } catch (error) {
+          showFormMessage(
+            'error',
+            'Unable to send your submission right now. Please try again later.'
+          );
         }
-        form.reset();
-        showFormMessage('success', 'Submission received. Thank you!');
-        renderSubmissions();
       });
-
-      renderSubmissions();
     </script>
   </body>
 </html>
